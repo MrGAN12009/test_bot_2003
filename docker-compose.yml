@@ -3,5 +3,5 @@ version: '3.8'
 services:
   bot:
     build: .
-    envfile: .env
+    env_file: .env
     restart: unless-stopped
