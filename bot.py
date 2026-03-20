@@ -53,7 +53,7 @@ def play_game(call):
     score = randint(-6, 6)
     add_score(call.from_user.id, score)
     logger.info("Пользователь %s заработал %d очков", call.from_user.username, score)
-    bot.answer_callback_query(call.id, f"Ты заработал {score} очков! Твой текущий счёт: {get_score(call.from_user.id)}")
+    bot.send_message(call.from_user.id, f"Ты заработал {score} очков!\nТвой текущий счёт: {get_score(call.from_user.id)}")
 
 
 @bot.message_handler(commands=["top"])
