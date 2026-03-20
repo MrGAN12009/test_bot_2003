@@ -1,5 +1,6 @@
 from telebot import TeleBot
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+from telebot import types
+from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 from dotenv import load_dotenv
 import os
 import logging
@@ -41,19 +42,19 @@ bot = TeleBot(os.getenv("BOT_TOKEN"))
 @bot.message_handler(commands=["start" , "help"])
 def start(message):
     add_user(message.from_user.id, message.from_user.username)
-    markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton("Играть", callback_data="play"))
+    markup = ReplyKeyboardMarkup(resize_keyboard=True) 
+    markup.add(KeyboardButton("Играть"))
 
     logger.info("Пришёл пользователь: %s", message.from_user.username)
     bot.send_message(message.chat.id, "Привет! Нажми /play, чтобы сыграть в игру и заработать очки!", reply_markup=markup)
 
 
-@bot.callback_query_handler(func=lambda call: call.data == "play")
-def play_game(call):
+@bot.message_handler(func=lambda message: message.text == "Играть")
+def play_game(message):
     score = randint(-6, 6)
-    add_score(call.from_user.id, score)
-    logger.info("Пользователь %s заработал %d очков", call.from_user.username, score)
-    bot.send_message(call.from_user.id, f"Ты заработал {score} очков!\nТвой текущий счёт: {get_score(call.from_user.id)}")
+    add_score(message.from_user.id, score)
+    logger.info("Пользователь %s заработал %d очков", message.from_user.username, score)
+    bot.send_message(message.from_user.id, f"Ты заработал {score} очков!\nТвой текущий счёт: {get_score(message.from_user.id)}")
 
 
 @bot.message_handler(commands=["top"])
